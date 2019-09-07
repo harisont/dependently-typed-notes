@@ -1,28 +1,25 @@
-% STM % Arianna Masciolini
+% Strongly typed notes 
+% Arianna Masciolini
 
-# Lecture 1
+# Introduction
+Key idea of the course = __Curry-Howard isomorphism__,i.e.
 
-## Intro
+> Programming = Mathematics, or Computer Science = Logic
 
-Key idea of the course = __Curry-Howard isomorphism__
+And more precisely:
 
-> Programming = Mathematics
-> _Terminating_ Functional Programming = _Constructive_ Mathematics ($\neq$ computation)
-> Computer Science = Logic
+> _Terminating_ Functional Programming = _Constructive_ Mathematics
 
-Object: __dependently typed programming__ (see below).
-
-Interesting talk: “Is Computer Science bad Mathematics?“
-
-Predicates in predicate logic -> __dependent types__, implemented in:
+Object of the course: __dependently typed programming__.
+_Dependent types_ come from predicate logic and are implemented in:
 
 - Coq(uand) (the one used to prove the planar map theorem) -> algorithms correct by constructions (not under absolute terms)
 - __Agda__
 - (Haskell with `GADTs`)
+- ...
 
-Related projects: Compcert (_verified compiler_ for a large subset of C. A verified compiler checks if the source and the target code have the same “meaning”).
-
-Software realiability (correctness) is hard to achieve because:
+## Types for software reliability
+Software realiability (correctness) is hard to achieve because of:
 
 - scale & complexity of modern systems
 - number of people involved
@@ -36,66 +33,56 @@ Ways to achieve it:
 - mathematical techniques
 - validations tools
 - testing
-- __types__
+- __types__:
+  - program behavior specification
+  - simplification of bug hunting (cf. type checking)
+  - optimisation (e.g. in terms of space)
 - …
 
-## Reliability via types
+## Basic Agda
 
-“Invented” with high level languages.
-
-Purposes:
-
-- program behavior specification
-- simplification of bug hunting (cf. type checking)
-- optimisation
-
-## Basic Agda stuff
-
-`Set` is the only native type in Agda (it’s the _type of **data types** and **small types**_). You can then construct function types.
+`Set` is the only native type in Agda (it’s the _type of **data types** and **small types**_). Starting from `Set`, one can then construct function types.
 
 ```agda
-module Bool where -- same name as the file name
-	data Bool : Set where -- introduction of a new data type, Bool
-		true : Bool -- first constructor (not capitalized!)
-		false : Bool -- first constructor (not capitalized!)
-
+-- module name = file name (mandatory)
+module Bool where
+	data Bool : Set where 
+		true : Bool 
+		false : Bool 
 ```
 
-Haskell equivalent:
+In the code above, we introduce a new data type `Bool` with two constructors (note that they are not capitalized). The Haskell equivalent would be:
 
 ```haskell
 data Bool = True | False
-
 ```
 
-Emacs: `ctrl+C - ctrl+L` triggers type checking & loading (which, if it succeeds, triggers syntax highlighting!).
-
-Now define a function:
+Here we define a simple function:
 
 ```agda
 -- see? Pattern matching!*
 not : Bool -> Bool
 not true = false
 not false = true
-
 ```
 
-* Pattern matching allows partial programming (programming with holes, question marks, partial refinement). Also, `ctrl+C - ctrl+C` somehow expands the patterns…? And `ctrl+C - ctrl+Space` does something else that is related, I guess
+Pattern matching allows _partial programming_ (programming with holes, question marks, partial refinement).
 
-h and you can eve use Unicode symbols, t.e. `\to` is $\to$ (just like in LaTeX! and even as function names, for instance you could call `not` $\neg$ instead).
+Here is an example of infix function (notice the underscores):
 
 ```agda
-_&&_ : Bool -> Bool -> Bool -- infix function
+_&&_ : Bool -> Bool -> Bool
 b && true = b
 b && false = false
-
-if_then_else_ : Bool -> Bool -> Bool -> Bool
-
 ```
 
+### Agda & Emacs
+The best way to interact with Agda is via Emacs. Here is a basic cheatsheet:
 
+- `ctrl+C - ctrl+L` triggers type checking & loading (which, if it succeeds, triggers syntax highlighting!)
+- `ctrl+C - ctrl+C` somehow expands the patterns…? 
+- `ctrl+C - ctrl+Space` does something else that is related, I guess
+
+You can even use Unicode symbols (wherever in the code, even as function names). They are written as in LaTeX, so for instance `\to` is $\to$.
 
 ---
-
-### Bookshelf
-
