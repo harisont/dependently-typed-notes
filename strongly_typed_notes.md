@@ -20,7 +20,16 @@ Object of the course: __dependently typed programming__.
 - (Haskell with `GADTs`)
 - ...
 
-Coq and Agda are two examples of _verified_ programming languages (or _proof assistants_, depending if we put the emphasis on programming or on theorem proving), i.e. languages that allow to prove theorems within the same language (the proofs are checked by the type checker), thus enabling program verification. They are also examples of _total languages_: a program in`e` of type `T` will always terminate with a value in `T`. No runtime error can occur and no nonterminating programs can be written (unless explicitly requested by the programmer).  
+Coq and Agda are two examples of _verified_ programming languages (or _proof assistants_, depending if we put the emphasis on programming or on theorem proving), i.e. languages that allow to prove theorems within the same language (the proofs are checked by the type checker), thus enabling program verification. 
+
+They are also examples of _total languages_: a program in`e` of type `T` will always terminate with a value in `T`. No runtime error can occur and no nonterminating programs can be written (unless explicitly requested by the programmer). This is implemented via an (incomplete) _termination checker_ that (only) works with _**primitive recursion**_ (a _primitive recursive function_ is a function that can be computed by a computer program whose loops are all `for` loops, i.e. an upper bound of the number of iterations of every loop can be determined _before_ entering the loop. __Primitive recursive functions form a strict subset of those general recursive functions that are also total functions__). Pragmas for disabling the termination checker:
+
+```agda
+{-# TERMINATING #-} -- asserts that a function is terminating
+{-# NON-TERMINATING #-} -- allow non-terminating functions
+```
+
+
 
 ## Types for software reliability
 Software reliability (correctness) is hard to achieve because of:
