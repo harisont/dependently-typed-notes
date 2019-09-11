@@ -281,7 +281,7 @@ id−implicit ∶ {X ∶ Set} -> X -> X
 id−implicit x = x
 ```
 
-Here, ==the typing rule is that if `b : {x : A} -> B`, and `a : A`, then `b : B[x := a]`, that is, that `b` is a term of type `B` where the term a has been substituted for the variable `x`==.
+Here, the typing rule is that if `b : {x : A} -> B`, and `a : A`, then `b : B[x := a]`, that is, that `b` is a term of type `B` where the term a has been substituted for the variable `x`.
 
 ### Polymorphic data types
 
@@ -421,3 +421,36 @@ so they are instances of the type of `refl`. Note that the above is not the same
 doublenegation b = refl
 ```
 
+### Pattern matching on the proof of an identity
+
+We can also prove that propositional identity is a __symmetric__ relation, i.e.
+
+```agda
+sym ∶ {A ∶ Set} -> (a a ′ ∶ A) -> a ≡ a ′ -> a ′ ≡ a
+sym a .a refl = refl
+
+```
+
+by pattern matching _on a proof object_ for identity. We begin with a `?`, as usual:
+
+```agda
+sym a a’ p = ?
+
+```
+
+Now we pattern match on `p`. The only constructor for `≡` is `refl` and Agda tries to unify
+its type with the type of the goal. This forces a and a’ to be identical (definitionally). We get
+
+```agda
+sym a .a refl = { }0
+```
+
+where the dot in front of the second a indicates that it is forced to be a by the
+unification. The type of the hole is now `a ≡ a` so we can fill it with `refl`.
+
+We can also prove the general rule of identity elimination, the rule that states that we can substitute identical elements for each other. If a property is true for `a1`, then it’s also true for any `a2` equal to `a1`:
+
+```agda
+subst ∶ {A ∶ Set} → {P ∶ A → Set} → {a1 a2 ∶ A} → a1 ≡ a2 → P a2 → P a1
+subst refl q = q
+```
