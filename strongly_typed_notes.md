@@ -353,7 +353,9 @@ In particular:
 
 We already defined booleans. Let’s prove some of their properties.
 
-### Proof that `not (not b) = b` (law of double negation)
+### Proof that `not (not b) === b` (law of double negation)
+
+(TODO: choose notation!)
 
 We prove that `not (not b) = b` both for `b = true` and `b = false`, so
 
@@ -421,6 +423,8 @@ so they are instances of the type of `refl`. Note that the above is not the same
 doublenegation b = refl
 ```
 
+as simplification can only take place after `b` has been instantiated.
+
 ### Pattern matching on the proof of an identity
 
 We can also prove that propositional identity is a __symmetric__ relation, i.e.
@@ -454,3 +458,80 @@ We can also prove the general rule of identity elimination, the rule that states
 subst ∶ {A ∶ Set} → {P ∶ A → Set} → {a1 a2 ∶ A} → a1 ≡ a2 → P a2 → P a1
 subst refl q = q
 ```
+
+---
+
+# An historical note
+
+Before the 30s, there were of course no research on programming languages (even though mechanical calculators had been around for a while). In the 30s it became a mathematically hot topic -> Church’s __lambda calculus__ (then _typed_ lambda calculus). In the early 70s, _dependently_ typed lambda calculus (Swedish logician ?). From this calculus:
+
+- ISWM (If You See What I Mean) ML (strict)
+- Haskell (lazy)
+
+Then Curry - Howard isomorphism -> Martin Löf type theory -> Agda.
+
+# Proving things in Agda (to be merged with previous notes)
+
+(3+4) + 6 = 7 + 6 = 13
+
+m $\equiv$ n -> Id N m n is the type of proofs that m $\equiv$ n (_identity set_) -> can be made more readable as in notes above (infix triple equals)
+
+refl : m $ \equiv$ m
+
+LHS $\equiv$ RHS (once computed or _normalized_)
+
+Some proofs are done automatically by Agda. ?
+
+```agda
+proofthatoneplusoneistwo : 1 + 1 $\equiv$ 2
+proofthatoneplusoneistwo = refl -- refl is the constructor of the identity set
+```
+
+`not (not b) = b` -> see proofs above
+
+# More on the Curry-Howard isomorphism
+
+Curry tried to define all functions in terms of two combinators:
+
+```
+K: A -> B -> A								Kxy = x
+S: (A -> B -> C) -> (A -> B) -> A -> C		Sxyz = xz(yz)
+```
+
+Also he realised that in some systems of logic you have
+
+```
+A )inc B )inc A
+(A )inc B )inc C) )inc (A )inc B) )inc A )inc C		
+```
+
+Looks the same!
+
+Identity `I` combinator `A -> A` (`A )inc A`)
+
+The identity function is a proof that a implies itself.
+
+If there is a correspondence btw the function arrow & implication (written as )inc), i.e.
+
+> proposition : implication = type : arrow
+
+then also
+
+> proposition : conjunction $\and$ = type : `A x B` (partition product, cartesian product, pair: `(A,B)` or `<A,B>`)
+>
+> proposition : disjunction $\or$ = type : `A + B` (Either, disjoint union, sum)
+>
+> proposition : negation $\neg$ = type : `A -> $\empty$` (very weird)
+>
+> proposition : $\bot$, false = type : $\empty$ (empty type)
+>
+> proposition : $\top$ = type : {*}, 1, N ? (one-element type)
+
+| logic                         | programming                      |
+| ----------------------------- | -------------------------------- |
+| proposition (e.g. $A \and B$) | type (e.g. `A x B`, aka `<A,B>`) |
+| introduction rule             | constructor (e.g. `<a,b>`)       |
+| elimination rule              | selector (e.g. `fst,snd`)        |
+
++ computation rule (due to CH isomorphism)
+
