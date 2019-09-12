@@ -517,7 +517,7 @@ If there is a correspondence btw the function arrow & implication (written as )i
 
 then also
 
-> proposition : conjunction $\and$ = type : `A x B` (partition product, cartesian product, pair: `(A,B)` or `<A,B>`)
+> proposition : conjunction $\and$ = type : `A x B` (partition product, Cartesian product, pair: `(A,B)` or `<A,B>`)
 >
 > proposition : disjunction $\or$ = type : `A + B` (Either, disjoint union, sum)
 >
@@ -534,4 +534,3 @@ then also
 | elimination rule              | selector (e.g. `fst,snd`)        |
 
 + computation rule (due to CH isomorphism)
-
