@@ -143,7 +143,7 @@ infixl 50 _&&_ -- left associative and with prec. 50
 If we wanted to define `&&` by gradual refinement, there is a special command call “case split” for generating the clauses for pattern matching. Example:
 
 1.  ```agda
-   _&&_ : Bool → Bool → Bool
+   _&&_ : Bool -> Bool -> Bool
    b && c = ?
    ```
 
@@ -358,57 +358,35 @@ In particular:
 
 ## Proofs about booleans
 
-We already defined booleans. Let’s prove some of their properties.
+We already defined booleans. Let’s prove some of their properties (code: `BoolProofs.agda`).
 
-### Proof that `not (not b) === b` (law of double negation)
+### Proof of the law of double negation
 
-(TODO: choose notation!)
+Let’s prove that `not (not b) = b`.
 
-We prove that `not (not b) = b` both for `b = true` and `b = false`, so
-
-```agda
-not (not true) = true
-not (not false) = false
-```
-
-intuitively, we can prove this by saying that both those equations follow by equational reasoning from the two defining equations for `not`:
+To write the proof in Agda, we first have to give it a name and a signature:
 
 ```agda
-not (not true) = not false = true
-not (not false) = not true = false
+duoblenegation : not not b ≡ b
 ```
 
-How to express this reasoning in Agda? First, we have to think of what type corresponds to the proposition `not (not b)`. We can use the __identity type__
+The type of this function is called an (__propositional__) _equality_  or _identity type_.
+
+Now we have to write a set of equations (in this specific case, only one equation) to prove that the theorem holds. On paper, we would just say that the theorem follows by the definition of `not`:
+$$
+\neg \neg true = \neg false = true
+$$
+and
+$$
+\neg \neg false = \neg true = false
+$$
+but in Agda we don’t need to do all this, as its compiler treats `a ≡ a'` according to the defining equations of both sides. So our type is equivalent to 
 
 ```agda
-Id A a a'
+b ≡ b
 ```
 
-which contains proofs that `a` and `a’`, variables of type `A`, are identical. At this point, we can write the law of double negation as the type
-
-```agda
-(b : Bool) -> Id Bool (not (not b)) b
-```
-
-We then need to write a function `refl` (standing for reflexivity of identity) that, for any `b : Bool`, returns an element (proof
-object) of type `Id Bool (not (not b)) b` (`a` and `a'` must be identical, after simplification). Hence (?) we define it as a data type with one constructor: 
-
-```agda
-data Id (A ∶ Set) (a ∶ A) ∶ A → Set where
-	refl ∶ Id A a a
-
-```
-
-A better way to write the same thing:
-
-```agda
-data _≡_ {A ∶ Set} (a ∶ A) ∶ A -> Set where
-refl ∶ a ≡ a
-
-```
-
-Note that there is an important difference between `a ≡ a’` (which is a type), and
-`a = a’` which is a relation between terms expressing that `a` and `a’` are definitionally equal. We can now write (?):
+(_definitional equality_) which we can prove with `refl` (for reflexivity):
 
 ```agda
 doublenegation ∶ (b ∶ Bool) → not (not b) ≡ b
@@ -416,15 +394,7 @@ doublenegation true = refl
 doublenegation false = refl
 ```
 
-Note that the types of the right hand sides of two respective equations are
-
-```agda
-not (not true) ≡ true
-not (not false) ≡ false
-
-```
-
-so they are instances of the type of `refl`. Note that the above is not the same as
+which is not the same as
 
 ```agda
 doublenegation b = refl
