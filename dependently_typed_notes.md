@@ -360,19 +360,21 @@ In particular:
 
 We already defined booleans. Let’s prove some of their properties (code: `BoolProofs.agda`).
 
-### Proof of the law of double negation
+### Proof of negation elimination rule
 
-Let’s prove that `not (not b) = b`.
+Let’s prove that `∀ (b: Bool) -> not (not b) ≡ b` (a universal theorem).
+
+> Note that, in Agda, __`∀` is used both for polymorphism and universal quantification__, as the two concepts are unified.
 
 To write the proof in Agda, we first have to give it a name and a signature:
 
 ```agda
-duoblenegation : not not b ≡ b
+duoblenegation : `∀ (b: Bool) -> not (not b) ≡ b`
 ```
 
-The type of this function is called an (__propositional__) _equality_  or _identity type_.
+The type of `not (not b) ≡ b` is called an (__propositional__) _equality_  or _identity type_.
 
-Now we have to write a set of equations (in this specific case, only one equation) to prove that the theorem holds. On paper, we would just say that the theorem follows by the definition of `not`:
+Now we have to write a set of equations to prove that the theorem holds. On paper, as be can only have two distinct values,we would just say that the theorem follows by the definition of `not`:
 $$
 \neg \neg true = \neg false = true
 $$
@@ -389,7 +391,7 @@ b ≡ b
 (_definitional equality_) which we can prove with `refl` (for reflexivity):
 
 ```agda
-doublenegation ∶ (b ∶ Bool) → not (not b) ≡ b
+duoblenegation : `∀ (b: Bool) -> not (not b) ≡ b`
 doublenegation true = refl
 doublenegation false = refl
 ```
@@ -401,6 +403,8 @@ doublenegation b = refl
 ```
 
 as simplification can only take place after `b` has been instantiated.
+
+
 
 ### Pattern matching on the proof of an identity
 
