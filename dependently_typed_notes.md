@@ -438,6 +438,8 @@ subst refl q = q
 
 # More on the Curry-Howard isomorphism
 
+## SKI combinators
+
 Curry tried to define all functions in terms of two combinators:
 
 ```
@@ -482,3 +484,23 @@ Some “lexicon” (with example):
 | elimination rule              | selector (e.g. `fst,snd`)        |
 
 + computation rule (due to CH isomorphism)
+
+## The Curry-Howard isomorphism in constructive logic
+
+### By the way, what is constructive logic exactly?
+
+Constructive logic is a __restriction of classical logic__. 
+
+In constructive logic, __if we prove that $A \or B$ is true, we always know which one(s ?) of the two propositions involved is true__. For a comparison between a nonconstructive and a constructive proof involving the nonconstructivity of the law of excluded middle, see ==VFP pag. 38-40==.
+
+### Relationship between the isomorphism and classical logic
+
+It does not appear possible to use the Curry-Howard isomorphism with nonconstructive reasoning (a program proving $\forall F. F \or \neg F$ would be a universal oracle!), but surprisingly enough, if we expand the kind of programs we are allowed to write, we can make use of it even with classical logic. Here is how: computationally, we could view
+$$
+\forall F. F \or \neg F
+$$
+as a theorem with a proof $p$ that takes a formula $F$ (it’s up to you to tell which of $F$ and $\neg F$ is true). Now remember that 
+$$
+\neg F \equiv F \to \bot
+$$
+(read as “$F$ implies a contradiction”). What $p$ does is to tell that $\neg F$ is true regardless of $F$. A proof $q$ in this form ($A \to B$) is still useful, because it can be called (note the similarity with function underlined by the terminology!) with an argument of type $A$ to then backtrack to $p$ (this exception-like backtracking proofs’ computational interpretation is _control operators_). For you can never take an irrevocable decision based on the truth value of $F$, this way of using the Curry-Howard isomorphism is not useful to programming (but it is useful to mathematics).
