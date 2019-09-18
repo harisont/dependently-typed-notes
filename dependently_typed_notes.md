@@ -388,7 +388,7 @@ but in Agda we don’t need to do all this, as its compiler treats `a ≡ a'` ac
 b ≡ b
 ```
 
-(_definitional equality_) which we can prove with `refl` (for reflexivity):
+(_definitional equality_) which we can prove with `refl` (for reflexivity) (note that `refl` is the only constructor for `≡`. See `Identity.agda`):
 
 ```agda
 duoblenegation : `∀ (b: Bool) -> not (not b) ≡ b`
@@ -404,34 +404,73 @@ doublenegation b = refl
 
 as simplification can only take place after `b` has been instantiated.
 
+> __Definitional equality__: two expressions are said to be _definitionally equal_ iff they can be proved equal using the defining equations for the function symbols involved (or at least, this is _almost_ the case. More on that later, maybe).
 
+### One more example, done better: type inference and implicit arguments
 
-### Pattern matching on the proof of an identity
-
-We can also prove that propositional identity is a __symmetric__ relation, i.e.
+Let us prove that
 
 ```agda
-sym ∶ {A ∶ Set} -> (a a ′ ∶ A) -> a ≡ a ′ -> a ′ ≡ a
-sym a .a refl = refl
-
+∀ (b : Bool) -> b && b = b
 ```
 
-by pattern matching _on a proof object_ for identity. We begin with a `?`, as usual:
+The proof is very similar to the one above:
+
+```agda
+&&-same : ∀ (b : Bool) -> b && b = b
+&&-same true = refl
+&&-same false = refl
+```
+
+But we can write it better:
+
+1. thanks to type inference, we can shorten the type signature: 
+
+   ```agda
+   &&-same : ∀ b -> b && b = b
+   ```
+
+2. We can make `b` an implicit argument:
+
+   ```agda
+   -- mind the curly braces 
+   &&-same : ∀ {b} -> b && b = b
+   &&-same {true} = refl
+   &&-same {false} = refl
+   ```
+
+### Pattern matching on the proof of an identity: the dot pattern
+
+We can also prove that propositional identity ($\equiv$) is a __symmetric__ relation, i.e.
+
+```agda
+sym ∶ {A ∶ Set} -> (a a′ ∶ A) -> a ≡ a′ -> a′ ≡ a
+```
+
+we do so by pattern matching _on the proof $a \equiv a '$ itself_. 
+
+As usual, we begin the proof with just a hole:
 
 ```agda
 sym a a’ p = ?
-
 ```
 
-Now we pattern match on `p`. The only constructor for `≡` is `refl` and Agda tries to unify
-its type with the type of the goal. This forces a and a’ to be identical (definitionally). We get
+Now we case split on `p`. The only constructor for `≡` is `refl`, so that is the only case to match. Also, note the dot before the second argument (which has been renamed to `a`):
 
 ```agda
 sym a .a refl = { }0
 ```
 
-where the dot in front of the second a indicates that it is forced to be a by the
-unification. The type of the hole is now `a ≡ a` so we can fill it with `refl`.
+it indicates that it is _definitionally forced_ - because of what `p` itself says - to be the same as `a`. 
+
+> The `.` (dot) pattern signals that the terms it indicates is not to be pattern matched, as it is dictated by the type of the entire pattern.
+
+The type of the hole is now `a ≡ a` so we can fill it with `refl`, thus completing the proof:
+
+```agda
+sym : {A : Set} -> (a a' : A) -> a ≡ a' -> a' ≡ a
+  sym a .a refl = refl
+```
 
 We can also prove the general rule of identity elimination, the rule that states that we can substitute identical elements for each other. If a property is true for `a1`, then it’s also true for any `a2` equal to `a1`:
 
@@ -439,6 +478,14 @@ We can also prove the general rule of identity elimination, the rule that states
 subst ∶ {A ∶ Set} → {P ∶ A → Set} → {a1 a2 ∶ A} → a1 ≡ a2 → P a2 → P a1
 subst refl q = q
 ```
+
+### The absurd pattern
+
+In Agda, the absurd pattern is represented as `()`. This is useful when the proof requires to prove something impossible in a case which is already, by itself impossible (it is a way to “quit early”). Note this pattern is definitionally equal to `true ≡ false`.
+
+### Rewriting
+
+The `rewrite p` pattern instructs Agda to replace all the occurrences of an expression in the goal with `p`. (…)
 
 # More on the Curry-Howard isomorphism
 
