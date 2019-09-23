@@ -555,3 +555,50 @@ $$
 \neg F \equiv F \to \bot
 $$
 (read as “$F$ implies a contradiction”). What $p$ does is to tell that $\neg F$ is true regardless of $F$. A proof $q$ in this form ($A \to B$) is still useful, because it can be called (note the similarity with function underlined by the terminology!) with an argument of type $A$ to then backtrack to $p$ (this exception-like backtracking proofs’ computational interpretation is _control operators_). For you can never take an irrevocable decision based on the truth value of $F$, this way of using the Curry-Howard isomorphism is not useful to programming (but it is useful to mathematics).
+
+---
+
+```agda
+absElim : {A : Set} -> N0 -> A	--N0 is absurd
+absElim {A} ()
+
+add : Nat -> Nat -> Nat
+add zero y = y
+add (succ x) y = succ (add x y)
+
+-- induction on natural numbers
+-- P zero is the base case...
+natrec : (P: Nat -> Set) -> P zero -> ((n : Nat) -> P n -> P (succ n)) -> (n : Nat) -> P n
+natrec P a b 0 = a
+natrec P a b (succ n) = b n (natrec P a b n) -- the recursive call is the inductive hypotesis
+
+-- induction on booleans (nonrecursive proof)
+boolrec : (P: Bool -> Set) -> P true -> P false -> (b : Bool) -> P b
+boolrec P vt vf true = vt
+boolrec P vt vf false = vf
+
+-- relation
+R : A -> A -> Set
+rel A = A -> A -> Set	-- type of relations on A
+
+subRel : {A : Set} -> (R S : rel A) -> Set
+subRel {A} R S = ?
+
+-- definitions of some properties
+trans : {A : Set} -> rel A -> Set
+trans {A} R = (a b c : A) -> R a b -> R b c -> R a c
+
+refl : {A : Set} -> rel A -> Set
+refl {A} R = (e : A) -> R e e
+
+```
+
+---
+
+```
+R : A -> A -> Set -- type of binary relations (-> decidability)
+```
+
+> Curry : propositional logic : trad. constant types = Howard : predicate logic : dependent types 
+
+## Mo
