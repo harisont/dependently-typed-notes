@@ -616,21 +616,38 @@ rel A = A -> A -> Set	-- type of relations on A
 subRel : {A : Set} -> (R S : rel A) -> Set
 subRel {A} R S = ?
 
--- definitions of some properties
+-- definitions of  properties
 trans : {A : Set} -> rel A -> Set
 trans {A} R = (a b c : A) -> R a b -> R b c -> R a c
 
 refl : {A : Set} -> rel A -> Set
 refl {A} R = (e : A) -> R e e
-
 ```
 
----
+## More on the Howard part of Curry-Howard (predicate logic)
 
+To establish a correspondence between _predicate_ logic and programming (in Agda) we need to talk about quantifiers as well:
+
+| Quantifier          | Agda see also: `PredicateLogic.agda` (`proof`, `witness`, you name it) |
+| ------------------- | ------------------------------------------------------------ |
+| $\forall x: A . P$  | `(x:A) -> Px`                                                |
+| $\exists x : A . P$ | `$\Sigma x: A . Px$`                                         |
+
+TODO: rewrite logic introduction/elimination rules alongside their Agda counterpart.
+
+# Natural induction
+
+The general principle of natural induction proved in Agda:
+
+```agda
+natind : {P : Nat -> Set}
+  -> P zero
+  -> ((m : Nat) -> P m -> P (succ m))
+  -> (n : Nat) -> P n
+natind base step zero     = base
+natind base step (succ n) = step n (natind base step n)
 ```
-R : A -> A -> Set -- type of binary relations (-> decidability)
-```
 
-> Curry : propositional logic : trad. constant types = Howard : predicate logic : dependent types 
-
-## Mo
+- Induction taken a step further
+- BNF - data types
+- Code: `BoolExpr.agda`
