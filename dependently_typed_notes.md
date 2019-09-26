@@ -338,6 +338,38 @@ head ∶ {A ∶ Set} -> {n ∶ Nat} -> Vect A (succ n) -> A
 head (a ∶∶ as) = a
 ```
 
+## Record types (name tuples)
+
+The equivalent of the object-ish notation in Haskell, useful because:
+
+- convenience of OOP-like syntax
+- (and if that wasn't enough) surjective pairing (?)
+
+Example:
+
+```agda
+-- definition
+record Date : Set where
+	constructor date -- optional
+	field
+		year : Nat
+		month : String -- requires a certain pragma
+		day : Nat
+
+-- construction
+today = record { year = 2019;
+				 month = "Sept";
+				 day = 23}
+				 
+today' = date 2019 "September" 23
+
+today'' = <2019, "September", 23>
+
+-- use of dot notation
+year-of : Date -> Nat
+year-of = Date.year
+```
+
 # Agda the proof assistant: how to prove theorems
 
 We already mentioned that Agda is (also) a proof assistant, i.e. a system where it is possible to write machine-checked proofs.
