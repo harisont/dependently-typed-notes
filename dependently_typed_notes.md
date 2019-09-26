@@ -588,7 +588,7 @@ $$
 $$
 (read as “$F$ implies a contradiction”). What $p$ does is to tell that $\neg F$ is true regardless of $F$. A proof $q$ in this form ($A \to B$) is still useful, because it can be called (note the similarity with function underlined by the terminology!) with an argument of type $A$ to then backtrack to $p$ (this exception-like backtracking proofs’ computational interpretation is _control operators_). For you can never take an irrevocable decision based on the truth value of $F$, this way of using the Curry-Howard isomorphism is not useful to programming (but it is useful to mathematics).
 
----
+
 
 ```agda
 absElim : {A : Set} -> N0 -> A	--N0 is absurd
@@ -598,7 +598,7 @@ add : Nat -> Nat -> Nat
 add zero y = y
 add (succ x) y = succ (add x y)
 
--- induction on natural numbers
+-- induction on natural number
 -- P zero is the base case...
 natrec : (P: Nat -> Set) -> P zero -> ((n : Nat) -> P n -> P (succ n)) -> (n : Nat) -> P n
 natrec P a b 0 = a
