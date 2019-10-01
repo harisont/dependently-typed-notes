@@ -652,84 +652,42 @@ natind base step (succ n) = step n (natind base step n)
 - BNF - data types
 - Code: `BoolExpr.agda`
 
----
+# Some more theory : lambda calculus
 
-`path.agda` - comparison between relations and paths -> proof by induction
+$\lambda$-calculus, apart from being a good theoretical model for FP, is to be considered the first programming language, designed by Alonzo Church in the 30s. It led to Church’s thesis, aka Church-Turing thesis (‘36):
 
-### Strong progress (operational semantics)
+> $\lambda$-Calculus & Turing Machines are equivalent and both can express every algorithm: TM <-> $\lambda$-C).
 
-```agda
-isNormal e <=> isValue e (not trivial proof)
-```
-
-Proof of => is called `corProgress`, prove of `<=` is called `lem1VM`.
-
-Strong progress is more general:
-
-$$\forall e | isvalue(e) + \exist e' |(e \to e')$$ (in the code there is a $\Sigma$ maybe instead of $\exist$ for some reason)
-
-$$e | isNormal(e) \neg \exist e' | (e \to e')$$ (progress?)
-
-(dont really know what the relationship between these two things is)
-
-### Compiler correctness proof
-
-Language: simple Haskell-like-but-strict language.
-
-Commands:
-
-- `ADD`
-- `LOAD`
-- `HALT`
-
-Compiled on a stack based machine.
-
-Evaluator `|->` (small step?)
-
-`compile` is the recursive function producing stack machine code.
-
-Hard to prove the correctness (cor something) from the beginning -> prove `thm1` instead
-
-### Confluence
-
-b and c have a common reduction (see handwritten notes).
-
-counfluence implies transitivity (proof: lemConf)
-
-(examples online)
-
-# Lambda calculus
-
-First programming language, designed by Alonzo Church in the 30s -> Church’s thesis (‘36) (aka Church-Turing thesis) (lambda calculus & Turing machine are equivalent and both can express every algorithm: TM <-> LC).
-
-Good theoretical model for functional programming.
-
-Extended Church-Turing thesis (extended due to quantum computing?).
+and then to the extended Church-Turing thesis (“reasonable”).
 
 Very minimal:
 
 ```
 e ::= x -- variable
-\ x e	-- abstraction
+\ x e	-- lambda abstraction
 e e     -- application
 ```
 
 Only computation rule (__substitution__):
 
 ```
-(\ x e) e' --> e (e'/x)	-- we replace x by e' in e
+(\ x e) e' --> e (e'/x)	-- aka replacement
 ```
 
-Example:
+Formal definitions of derived rules: 
+$$
+\frac{e \to e’}{\lambda x e \to \lambda x e’}
+$$
 
-```
-I = \ x x
-I I = (\ x x) I --> x (I/x) = I
+$$
+\frac{e_0 \to e’_0}{e_0 e_1 \to e’_0 e’_1}
+$$
 
-d = \ x (x x) -- x applied to itself (not possile in ordinary math)
-...
-```
+$$
+\frac{e_1 \to e’_1}{e_0 e_1 \to e’_0 e’_1}
+$$
 
-Formal defs.: see handwritten notes.
+$$
+\frac{}{(\lambda x e) e’ \to e(e’/x)}
+$$
 
-Starting from e, can we find e’ such that e->*e’ is normal? No algorithm to decide this.
